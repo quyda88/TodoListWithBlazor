@@ -1,6 +1,42 @@
 ﻿@page "/todolist"
+@using TodoListForMee.Components.Controls;
 <h3>My Todo List of @name</h3>
 
 @code {
     string name = "D.A.Quy";
 }
+@if(lstTaskDto == null)
+{
+    <LoadingIndicator></LoadingIndicator>
+}
+else
+{    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Priority
+                </th>
+                <th>Assigenee</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in lstTaskDto)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Priority</td>
+                    <td>@item.AssigneeName</td>
+                    <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

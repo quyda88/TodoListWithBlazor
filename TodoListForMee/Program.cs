@@ -1,10 +1,30 @@
 using TodoListForMee.Components;
+using TodoListForMee.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddTransient<ITaskApiClient, TaskApiClient>();
+
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:5002") });
+//builder.Services.AddScoped(sp => new HttpClient
+//{
+//    BaseAddress = new Uri(builder.Configuration["BackendApiUrl"])
+//});
+
+builder.Services.AddCors(options =>
+{    
+    options.AddPolicy("Policy1",
+        policy => policy
+        .SetIsOriginAllowed((host) => true)
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
+});
+
 
 var app = builder.Build();
 
@@ -23,5 +43,7 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.UseCors("Policy1");
 
 app.Run();
